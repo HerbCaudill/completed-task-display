@@ -1,5 +1,9 @@
 body.hide-completed-tasks .markdown-preview-view ul > li.task-list-item.is-checked,
-body.hide-completed-tasks .markdown-source-view .HyperMD-task-line[data-task]:not([data-task=" "]) {
-    display: none;
-    }
-}"])
+body.hide-completed-tasks .hide-checked,
+body.hide-completed-tasks .markdown-source-view .HyperMD-task-line[data-task]:not([data-task=' ']) {
+  display: none !important;
+}
+
+.hide-checked:not([data-task='x']) {
+  opacity: 0.4;
+}
