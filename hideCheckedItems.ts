@@ -6,8 +6,7 @@ const listClass = 'HyperMD-list-line'
  */
 export const hideCheckedItems = (container: Element) => {
   const lines = Array.from(container.querySelectorAll(`.${listClass}`))
-  let currentLevel = 0
-  let insideCheckedParent = false
+  const checkedLevels: number[] = []
 
   // First pass: identify items that should have the class
   const shouldHide = new Set<Element>()
@@ -19,23 +18,16 @@ export const hideCheckedItems = (container: Element) => {
     const levelClass = classNames.find(cls => cls.startsWith(`${listClass}-`))
     const level = levelClass ? Number.parseInt(levelClass.replace(`${listClass}-`, ''), 10) : 0
 
-    // If we're inside a checked parent's children
-    if (insideCheckedParent) {
-      // Add styling class to children (higher level = deeper nesting)
-      if (level > currentLevel) {
-        shouldHide.add(line)
-      } else {
-        // We've hit another item at the same or higher level
-        insideCheckedParent = false
-      }
+    // Remove any checked parent levels that are higher than current level
+    while (checkedLevels.length > 0 && checkedLevels[checkedLevels.length - 1] >= level) {
+      checkedLevels.pop()
     }
-    // If this is a checked parent item, hide it
-    else if (line.getAttribute('data-task') === 'x') {
-      insideCheckedParent = true
-      shouldHide.add(line)
-      currentLevel = level
-      continue
-    }
+
+    const isChecked = line.getAttribute('data-task') === 'x'
+    const parentIsChecked = checkedLevels.length > 0 && level > checkedLevels[checkedLevels.length - 1]
+
+    if (isChecked) checkedLevels.push(level)
+    if (isChecked || parentIsChecked) shouldHide.add(line)
   }
 
   // Second pass: update classes efficiently to minimize DOM changes

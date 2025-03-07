@@ -1,12 +1,11 @@
-import { hideCheckedItems } from './hideCheckedItems'
 import { addIcon, App, MarkdownView, Plugin, PluginManifest } from 'obsidian'
+import { hideCheckedItems } from './hideCheckedItems'
 
 const SHOWING = 'Showing completed'
 const HIDING = 'Hiding completed'
 
 export default class TaskHiderPlugin extends Plugin {
   private observers: Map<Element, MutationObserver> = new Map()
-  private processingUpdate = false
   private statusBar: HTMLElement
 
   constructor(app: App, manifest: PluginManifest) {
@@ -73,9 +72,7 @@ export default class TaskHiderPlugin extends Plugin {
           return false
         })
 
-        if (shouldProcess) {
-          this.updateCheckedItemsChildren(container)
-        }
+        if (shouldProcess) this.updateCheckedItemsChildren(container)
       })
 
       observer.observe(container, {
@@ -91,14 +88,7 @@ export default class TaskHiderPlugin extends Plugin {
   }
 
   updateCheckedItemsChildren(container: Element) {
-    try {
-      // Set flag to avoid recursive calls
-      this.processingUpdate = true
-      hideCheckedItems(container)
-    } finally {
-      // Always clear the flag when done
-      this.processingUpdate = false
-    }
+    hideCheckedItems(container)
   }
 
   onunload() {

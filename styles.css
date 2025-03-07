@@ -4,6 +4,6 @@ body.hide-completed-tasks .markdown-source-view .HyperMD-task-line[data-task]:no
   display: none !important;
 }
 
-.hide-checked:not([data-task='x']) {
-  opacity: 0.4;
+.hide-checked {
+  opacity: 0.5 !important;
 }

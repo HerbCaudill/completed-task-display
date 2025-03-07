@@ -10,6 +10,13 @@ const testCases = [
     `,
   },
   {
+    name: 'hides consecutive checked items',
+    input: `
+      x | - [x] alpha
+      x | - [x] bravo
+    `,
+  },
+  {
     name: 'hides children of checked tasks',
     input: `
       x | - [x] alpha
